@@ -1,5 +1,7 @@
 package com.timeks.base.enums;
 
+import java.util.Arrays;
+
 public enum Status {
     TODO(0, "Todo"),
     IN_PROGRESS(10,"In Progress"),
@@ -12,6 +14,14 @@ public enum Status {
     Status(Integer code, String text) {
         this.code = code;
         this.text = text;
+    }
+
+    public static Status getEnum(Integer code) {
+        return code == null
+                ? null
+                : Arrays.stream(values())
+                    .filter(s -> s.code.equals(code))
+                    .findFirst().orElse(null);
     }
 
     public Integer getCode() {
