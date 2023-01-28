@@ -1,6 +1,6 @@
 # Introduction
 TIMEKS is a group of software that helps teams manage their tasks, issues in a customizable way. 
-Basically it can be said that it aims to be a Jira Software open source alternative.
+Simply, it aims to be a Jira Software open source alternative.
 
 # Getting Started
 
