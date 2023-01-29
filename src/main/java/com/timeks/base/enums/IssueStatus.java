@@ -1,8 +1,10 @@
 package com.timeks.base.enums;
 
+import com.timeks.base.exception.IssueStatusNotFound;
+
 import java.util.Arrays;
 
-public enum Status {
+public enum IssueStatus {
     TODO(0, "Todo"),
     IN_PROGRESS(10,"In Progress"),
     IN_REVIEW(20,"In Review"),
@@ -11,17 +13,18 @@ public enum Status {
     private final Integer code;
     private final String text;
 
-    Status(Integer code, String text) {
+    IssueStatus(Integer code, String text) {
         this.code = code;
         this.text = text;
     }
 
-    public static Status getEnum(Integer code) {
+    public static IssueStatus getEnum(Integer code) {
         return code == null
                 ? null
                 : Arrays.stream(values())
-                    .filter(s -> s.code.equals(code))
-                    .findFirst().orElse(null);
+                .filter(s -> s.code.equals(code))
+                .findFirst()
+                .orElseThrow(IssueStatusNotFound::new);
     }
 
     public Integer getCode() {

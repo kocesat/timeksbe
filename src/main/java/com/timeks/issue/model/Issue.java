@@ -1,29 +1,34 @@
 package com.timeks.issue.model;
 
-import com.timeks.base.enums.Status;
-import com.timeks.base.enums.converters.StatusConverter;
+import com.timeks.base.enums.IssueStatus;
+import com.timeks.base.enums.IssueType;
+import com.timeks.base.enums.converters.IssueStatusConverter;
+import com.timeks.base.enums.converters.IssueTypeConverter;
+import com.timeks.base.model.AuditableBaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @Entity
-@Table(name = "tissue")
+@Table(name = "issues")
 @Getter
 @Setter
-@Builder
+@SuperBuilder
 @NoArgsConstructor
-@AllArgsConstructor
-public class Issue {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Issue extends AuditableBaseEntity {
     private String description;
-    @Convert(converter = StatusConverter.class)
-    private Status status;
+    @Convert(converter = IssueStatusConverter.class)
+    @Column(name = "status_code")
+    private IssueStatus issueStatus;
+    @Convert(converter = IssueTypeConverter.class)
+    @Column(name = "type_code")
+    private IssueType issueType;
 
-    public static Issue of(IssueDto dto) {
+    public static Issue from(IssueDto dto) {
         return Issue.builder()
                 .description(dto.getDescription())
-                .status(Status.getEnum(dto.getStatusCode()))
+                .issueStatus(IssueStatus.getEnum(dto.getStatusCode()))
+                .issueType(IssueType.getEnum(dto.getIssueTypeCode()))
                 .build();
     }
 }

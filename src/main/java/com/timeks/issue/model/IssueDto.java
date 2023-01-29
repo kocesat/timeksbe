@@ -1,10 +1,10 @@
 package com.timeks.issue.model;
 
-import com.timeks.base.enums.Status;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.timeks.base.enums.IssueStatus;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.extern.jackson.Jacksonized;
-
-import javax.validation.constraints.NotNull;
 
 @Builder
 @Getter
@@ -12,20 +12,26 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @AllArgsConstructor
 @Jacksonized
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class IssueDto {
-    private Long key;
+    private String key;
     private String description;
     @Builder.Default
     @NotNull(message = "Status code cannot be null")
-    private Integer statusCode = Status.TODO.getCode();
+    private Integer statusCode = IssueStatus.TODO.getCode();
     private String statusText;
+    @NotNull(message = "Issue type code cannot be null")
+    private Integer issueTypeCode;
+    private String issueTypeText;
 
-    public static IssueDto of(Issue issue) {
+    public static IssueDto from(Issue issue) {
         return IssueDto.builder()
-                .key(issue.getId())
+                .key(issue.getKey().toString())
                 .description(issue.getDescription())
-                .statusCode(issue.getStatus().getCode())
-                .statusText(issue.getStatus().getText())
+                .statusCode(issue.getIssueStatus().getCode())
+                .statusText(issue.getIssueStatus().getText())
+                .issueTypeCode(issue.getIssueType().getCode())
+                .issueTypeText(issue.getIssueType().getText())
                 .build();
     }
 }

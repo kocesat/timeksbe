@@ -2,13 +2,12 @@ package com.timeks.issue.controller;
 
 import com.timeks.base.model.BaseResponse;
 import com.timeks.issue.model.IssueDto;
-import com.timeks.issue.repository.IssueRepository;
 import com.timeks.issue.service.IssueService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.stream.Collectors;
 
 @RestController
@@ -21,14 +20,14 @@ public class IssueController {
     public ResponseEntity<BaseResponse> getAll() {
         var issues = issueService.findAll()
                 .stream()
-                .map(IssueDto::of)
+                .map(IssueDto::from)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(BaseResponse.of(issues));
     }
 
     @PostMapping
-    public ResponseEntity<BaseResponse> save(@Valid @RequestBody IssueDto dto) {
+    public ResponseEntity<BaseResponse> save(@RequestBody @Valid IssueDto dto) {
         final var issue = issueService.save(dto);
-        return ResponseEntity.ok(BaseResponse.withMessage("Issue saved", IssueDto.of(issue)));
+        return ResponseEntity.ok(BaseResponse.withMessage("Issue saved", IssueDto.from(issue)));
     }
 }

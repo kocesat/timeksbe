@@ -1,6 +1,7 @@
 package com.timeks.issue.service.impl;
 
-import com.timeks.base.enums.Status;
+import com.timeks.base.enums.IssueStatus;
+import com.timeks.base.enums.IssueType;
 import com.timeks.issue.model.Issue;
 import com.timeks.issue.model.IssueDto;
 import com.timeks.issue.repository.IssueRepository;
@@ -25,12 +26,17 @@ public class IssueServiceImpl implements IssueService {
     }
 
     @Override
-    public List<Issue> findByStatus(Status status) {
-        return issueRepository.findAllByStatus(status);
+    public List<Issue> findByStatuses(List<IssueStatus> issueStatuses) {
+        return issueRepository.findAllByIssueStatusIn(issueStatuses);
+    }
+
+    @Override
+    public List<Issue> findByTypes(List<IssueType> issueTypes) {
+        return issueRepository.findAllByIssueTypeIn(issueTypes);
     }
 
     @Override
     public Issue save(IssueDto dto) {
-        return issueRepository.save(Issue.of(dto));
+        return issueRepository.save(Issue.from(dto));
     }
 }
