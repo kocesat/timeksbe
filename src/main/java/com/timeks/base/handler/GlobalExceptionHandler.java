@@ -1,36 +1,55 @@
 package com.timeks.base.handler;
 
 import com.timeks.base.exception.TimeksRuntimeException;
+import com.timeks.base.model.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ExceptionHandlerExceptionResolver {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public Map<String, String> handleValidationExceptions(
+    public ResponseEntity<ErrorResponse> handleValidationExceptions(
             MethodArgumentNotValidException ex) {
-        Map<String, String> errors = new HashMap<>();
+        List<String> fieldErrors = new ArrayList<>();
         ex.getBindingResult().getAllErrors().forEach((error) -> {
-            String fieldName = ((FieldError) error).getField();
             String errorMessage = error.getDefaultMessage();
-            errors.put(fieldName, errorMessage);
+            fieldErrors.add(errorMessage);
         });
-        return errors;
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .error("Following fields are not compatible")
+                .fieldErrors(fieldErrors)
+                .build();
+        return ResponseEntity.badRequest().body(errorResponse);
     }
 
     @ExceptionHandler(TimeksRuntimeException.class)
-    public ResponseEntity handleTimeksExceptions(
+    public ResponseEntity<ErrorResponse> handleTimeksExceptions(
             TimeksRuntimeException ex) {
-        return ResponseEntity.badRequest().body(ex.getMessage());
+        var errorResponse = ErrorResponse.builder()
+                .error(ex.getMessage())
+                .build();
+        return ResponseEntity
+                .badRequest()
+                .body(errorResponse);
     }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> handleException(Exception ex) {
+        var errorResponse = ErrorResponse.builder()
+                .error("Looks like an error occured that we do not expect")
+                .build();
+        return ResponseEntity
+                .badRequest()
+                .body(errorResponse);
+    }
+
 }

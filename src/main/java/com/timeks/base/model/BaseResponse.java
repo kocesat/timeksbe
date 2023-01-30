@@ -17,7 +17,7 @@ public class BaseResponse {
                 .build();
     }
 
-    public static BaseResponse withMessage(String message, Object data) {
+    public static BaseResponse of(String message, Object data) {
         return BaseResponse.builder()
                 .message(message)
                 .data(data)

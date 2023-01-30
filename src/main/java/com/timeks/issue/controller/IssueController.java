@@ -12,9 +12,11 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/v1/issue")
+@RequestMapping(IssueController.ENDPOINT_BASE_URL)
 public class IssueController {
     private final IssueService issueService;
+
+    public static final String ENDPOINT_BASE_URL = "/api/v1/issue";
 
     @GetMapping
     public ResponseEntity<BaseResponse> getAll() {
@@ -28,6 +30,6 @@ public class IssueController {
     @PostMapping
     public ResponseEntity<BaseResponse> save(@RequestBody @Valid IssueDto dto) {
         final var issue = issueService.save(dto);
-        return ResponseEntity.ok(BaseResponse.withMessage("Issue saved", IssueDto.from(issue)));
+        return ResponseEntity.ok(BaseResponse.of("Issue saved", IssueDto.from(issue)));
     }
 }
