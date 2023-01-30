@@ -14,7 +14,7 @@ import lombok.extern.jackson.Jacksonized;
 @Jacksonized
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class IssueDto {
-    private String key;
+    private Long key;
     private String description;
     @Builder.Default
     @NotNull(message = "Status code cannot be null")
@@ -23,15 +23,17 @@ public class IssueDto {
     @NotNull(message = "Issue type code cannot be null")
     private Integer issueTypeCode;
     private String issueTypeText;
+    private boolean closed;
 
     public static IssueDto from(Issue issue) {
         return IssueDto.builder()
-                .key(issue.getKey().toString())
+                .key(issue.getId())
                 .description(issue.getDescription())
                 .statusCode(issue.getIssueStatus().getCode())
                 .statusText(issue.getIssueStatus().getText())
                 .issueTypeCode(issue.getIssueType().getCode())
                 .issueTypeText(issue.getIssueType().getText())
+                .closed(issue.isClosed())
                 .build();
     }
 }

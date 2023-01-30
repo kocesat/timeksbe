@@ -23,12 +23,14 @@ public class Issue extends AuditableBaseEntity {
     @Convert(converter = IssueTypeConverter.class)
     @Column(name = "type_code")
     private IssueType issueType;
+    private boolean closed;
 
     public static Issue from(IssueDto dto) {
         return Issue.builder()
                 .description(dto.getDescription())
                 .issueStatus(IssueStatus.getEnum(dto.getStatusCode()))
                 .issueType(IssueType.getEnum(dto.getIssueTypeCode()))
+                .closed(dto.isClosed())
                 .build();
     }
 }
