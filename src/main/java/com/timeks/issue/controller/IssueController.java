@@ -1,7 +1,7 @@
 package com.timeks.issue.controller;
 
 import com.timeks.base.model.BaseResponse;
-import com.timeks.issue.model.IssueDto;
+import com.timeks.issue.model.dto.IssueDto;
 import com.timeks.issue.service.IssueService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -12,15 +12,24 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(IssueController.ENDPOINT_BASE_URL)
+@RequestMapping(IssueController.BASE_URI)
 public class IssueController {
     private final IssueService issueService;
 
-    public static final String ENDPOINT_BASE_URL = "/api/v1/issue";
+    public static final String BASE_URI = "/api/v1/issue";
 
     @GetMapping
     public ResponseEntity<BaseResponse> getAll() {
         var issues = issueService.findAll()
+                .stream()
+                .map(IssueDto::from)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(BaseResponse.of(issues));
+    }
+
+    @GetMapping("/{projectId}/project")
+    public ResponseEntity<BaseResponse> getByProjectId(@PathVariable("projectId") Long projectId) {
+        var issues = issueService.findAllByProjectId(projectId)
                 .stream()
                 .map(IssueDto::from)
                 .collect(Collectors.toList());
