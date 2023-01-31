@@ -5,6 +5,7 @@ import com.timeks.base.enums.IssueType;
 import com.timeks.base.enums.converters.IssueStatusConverter;
 import com.timeks.base.enums.converters.IssueTypeConverter;
 import com.timeks.base.model.AuditableBaseEntity;
+import com.timeks.issue.model.dto.IssueDto;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -24,6 +25,9 @@ public class Issue extends AuditableBaseEntity {
     @Column(name = "type_code")
     private IssueType issueType;
     private boolean closed;
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "project_id")
+    private Project project;
 
     public static Issue from(IssueDto dto) {
         return Issue.builder()
