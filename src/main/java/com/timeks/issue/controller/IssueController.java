@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(IssueController.BASE_URI)
+@CrossOrigin(origins = "http://localhost:3000")
 public class IssueController {
     private final IssueService issueService;
 
@@ -20,11 +21,11 @@ public class IssueController {
 
     @GetMapping
     public ResponseEntity<BaseResponse> getAll() {
-        var issues = issueService.findAll()
+        var issueDtos = issueService.findAll()
                 .stream()
                 .map(IssueDto::from)
                 .collect(Collectors.toList());
-        return ResponseEntity.ok(BaseResponse.of(issues));
+        return ResponseEntity.ok(BaseResponse.of(issueDtos));
     }
 
     @GetMapping("/{projectId}/project")
