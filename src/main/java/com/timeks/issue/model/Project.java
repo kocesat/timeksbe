@@ -23,7 +23,9 @@ import java.util.List;
 @NoArgsConstructor
 public class Project extends AuditableBaseEntity {
     private String name;
+
     @Builder.Default
+    // CascadeType.ALL means that if Project is deleted then all its issues deleted as well
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "project")
     private List<Issue> issueList = new ArrayList<>();
 
