@@ -11,6 +11,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,8 +27,7 @@ public class Project extends AuditableBaseEntity {
     private String name;
 
     @Builder.Default
-    // CascadeType.ALL means that if Project is deleted then all its issues deleted as well
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "project")
+    @OneToMany(mappedBy = "project", cascade = CascadeType.PERSIST)
     private List<Issue> issueList = new ArrayList<>();
 
     public static Project from(ProjectDto dto) {

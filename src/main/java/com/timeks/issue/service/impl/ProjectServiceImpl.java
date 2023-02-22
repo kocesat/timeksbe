@@ -35,4 +35,10 @@ public class ProjectServiceImpl implements ProjectService {
     public List<Project> findAll() {
         return projectRepository.findAll();
     }
+
+    @Override
+    public void deleteById(Long id) {
+        final var project = findById(id);
+        projectRepository.deleteById(id);
+    }
 }
